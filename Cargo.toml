@@ -9,3 +9,9 @@ crate-type = ["cdylib"]
 [dependencies]
 csscolorparser = "0.6.2"
 red4ext-rs = { git = "https://github.com/jac3km4/red4ext-rs.git", rev = "8e938fa567afe71178268fbad0f7ea4da614eeb5", features = ["macros"] }
+
+[dev-dependencies]
+static_assertions = "1.1.0"
+
+[profile.release]
+lto = "thin"

@@ -21,13 +21,14 @@ define_trait_plugin! (
     plugin: ColorConverter
 );
 
+/// See [RED4ext.SDK](https://github.com/WopsS/RED4ext.SDK/blob/master/include/RED4ext/Scripting/Natives/Generated/Color.hpp#L12)
 #[derive(Debug)]
 #[repr(C)]
 pub struct Color {
-    alpha: u8,
     red: u8,
-    blue: u8,
     green: u8,
+    blue: u8,
+    alpha: u8,
 }
 
 unsafe impl NativeRepr for Color {
@@ -37,10 +38,10 @@ unsafe impl NativeRepr for Color {
 impl Default for Color {
     fn default() -> Self {
         Self {
-            alpha: 0,
             red: 0,
-            blue: 0,
             green: 0,
+            blue: 0,
+            alpha: 0,
         }
     }
 }
@@ -57,4 +58,12 @@ fn color_hex_to_rgb(hex: String) -> Color {
     }
     red4ext_rs::error!("unable to convert {hex} to RGBA");
     Color::default()
+}
+
+#[cfg(test)]
+mod memory {
+    #[test]
+    fn size() {
+        static_assertions::const_assert_eq!(std::mem::size_of::<super::Color>(), 0x4);
+    }
 }
