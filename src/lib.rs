@@ -67,3 +67,26 @@ mod memory {
         static_assertions::const_assert_eq!(std::mem::size_of::<super::Color>(), 0x4);
     }
 }
+
+#[cfg(test)]
+mod alpha {
+    use crate::color_hex_to_rgb;
+
+    #[test]
+    fn with() {
+        let color: super::Color = color_hex_to_rgb("AABBCCDD".into());
+        assert_eq!(color.red, 170);
+        assert_eq!(color.green, 187);
+        assert_eq!(color.blue, 204);
+        assert_eq!(color.alpha, 221);
+    }
+
+    #[test]
+    fn without() {
+        let color: super::Color = color_hex_to_rgb("AABBCC".into());
+        assert_eq!(color.red, 170);
+        assert_eq!(color.green, 187);
+        assert_eq!(color.blue, 204);
+        assert_eq!(color.alpha, 255);
+    }
+}
