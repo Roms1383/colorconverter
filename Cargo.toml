@@ -1,0 +1,11 @@
+[package]
+name = "colorconverter"
+version = "0.1.0"
+edition = "2021"
+
+[lib]
+crate-type = ["cdylib"]
+
+[dependencies]
+csscolorparser = "0.6.2"
+red4ext-rs = { git = "https://github.com/jac3km4/red4ext-rs.git", rev = "8e938fa567afe71178268fbad0f7ea4da614eeb5", features = ["macros"] }
