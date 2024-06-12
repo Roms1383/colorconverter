@@ -8,7 +8,7 @@ use red4ext_rs::{
 struct ColorConverter;
 
 impl Plugin for ColorConverter {
-    const VERSION: Version = Version::new(1, 0, 0);
+    const VERSION: Version = Version::new(0, 1, 0);
 
     fn register() {
         register_function!("ColorHexToRgba", color_hex_to_rgb);
