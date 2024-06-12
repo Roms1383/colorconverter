@@ -1,0 +1,49 @@
+name: CD
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  bundle:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: true
+      - name: Set LIBCLANG_PATH
+        run: echo "LIBCLANG_PATH=$((gcm clang).source -replace "clang.exe")" >> $env:GITHUB_ENV
+      - name: Prepare Rust toolchain
+        uses: dtolnay/rust-toolchain@nightly
+        with:
+          targets: x86_64-pc-windows-msvc
+      - uses: Swatinem/rust-cache@v2
+        with:
+          key: release
+      - name: Additional tools
+        uses: taiki-e/install-action@v2
+        with:
+          tool: just
+      - name: Bundle plugin files
+        run: just build
+      - name: Zip files
+        uses: thedoctor0/zip-release@0.7.6
+        with:
+          type: zip
+          filename: colorconverter-windows-${{ github.ref_name }}.zip
+          directory: .
+          path: r6,red4ext
+      - name: Generate zip checksum
+        run: Get-FileHash -Path "colorconverter-windows-${{ github.ref_name }}.zip" -Algorithm SHA256 | Select-Object -ExpandProperty Hash > "checksum.txt"
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ github.ref_name }}-windows-artifact
+          path: colorconverter-windows-${{ github.ref_name }}/colorconverter-windows-${{ github.ref_name }}.zip
+          if-no-files-found: error
+      - name: Upload artifact checksum
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ github.ref_name }}-windows-artifact-checksum
+          path: checksum.txt
+          if-no-files-found: error
