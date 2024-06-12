@@ -1,5 +1,7 @@
 # color converter
 
+![Cyberpunk 2077 version compatibility](https://img.shields.io/badge/Cyberpunk_2077-patch_2.12a-yellow) [![build](https://github.com/cyb3rpsych0s1s/colorconverter/actions/workflows/ci.yml/badge.svg)](https://github.com/cyb3rpsych0s1s/colorconverter/actions)
+
 A small example at adding a `native func` in Redscript to calculate RGBA from a hex string.
 
 ## build
