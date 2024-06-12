@@ -1,8 +1,9 @@
 name: CD
 on:
-  push:
-    branches:
-      - main
+  workflow_run:
+    workflows: ["CI"]
+    branches: [main]
+    types: [completed]
 
 jobs:
   bundle:
@@ -25,21 +26,21 @@ jobs:
         with:
           tool: just
       - name: Bundle plugin files
-        run: just build
+        run: just bundle
       - name: Zip files
         uses: thedoctor0/zip-release@0.7.6
         with:
           type: zip
           filename: colorconverter-windows-${{ github.ref_name }}.zip
-          directory: .
-          path: r6,red4ext
+          directory: bundle
+          path: .
       - name: Generate zip checksum
-        run: Get-FileHash -Path "colorconverter-windows-${{ github.ref_name }}.zip" -Algorithm SHA256 | Select-Object -ExpandProperty Hash > "checksum.txt"
+        run: Get-FileHash -Path "bundle/colorconverter-windows-${{ github.ref_name }}.zip" -Algorithm SHA256 | Select-Object -ExpandProperty Hash > "checksum.txt"
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
           name: ${{ github.ref_name }}-windows-artifact
-          path: colorconverter-windows-${{ github.ref_name }}/colorconverter-windows-${{ github.ref_name }}.zip
+          path: bundle/colorconverter-windows-${{ github.ref_name }}.zip
           if-no-files-found: error
       - name: Upload artifact checksum
         uses: actions/upload-artifact@v4
