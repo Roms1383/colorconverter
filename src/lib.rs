@@ -22,7 +22,7 @@ define_trait_plugin! (
 );
 
 /// See [RED4ext.SDK](https://github.com/WopsS/RED4ext.SDK/blob/master/include/RED4ext/Scripting/Natives/Generated/Color.hpp#L12)
-#[derive(Debug)]
+#[derive(Debug, Default)]
 #[repr(C)]
 pub struct Color {
     red: u8,
@@ -35,16 +35,6 @@ unsafe impl NativeRepr for Color {
     const NAME: &'static str = "Color";
 }
 
-impl Default for Color {
-    fn default() -> Self {
-        Self {
-            red: 0,
-            green: 0,
-            blue: 0,
-            alpha: 0,
-        }
-    }
-}
 
 fn color_hex_to_rgb(hex: String) -> Color {
     if let Ok(color) = hex.as_str().parse::<csscolorparser::Color>() {
