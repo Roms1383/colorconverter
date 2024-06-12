@@ -11,7 +11,7 @@ impl Plugin for ColorConverter {
     const VERSION: Version = Version::new(0, 1, 0);
 
     fn register() {
-        register_function!("ColorHexToRgba", color_hex_to_rgb);
+        register_function!("ColorHexToRgba", color_hex_to_rgba);
     }
 }
 
@@ -35,8 +35,7 @@ unsafe impl NativeRepr for Color {
     const NAME: &'static str = "Color";
 }
 
-
-fn color_hex_to_rgb(hex: String) -> Color {
+fn color_hex_to_rgba(hex: String) -> Color {
     if let Ok(color) = hex.as_str().parse::<csscolorparser::Color>() {
         let [red, green, blue, alpha] = color.to_rgba8();
         return Color {
@@ -60,11 +59,11 @@ mod memory {
 
 #[cfg(test)]
 mod alpha {
-    use crate::color_hex_to_rgb;
+    use crate::color_hex_to_rgba;
 
     #[test]
     fn with() {
-        let color: super::Color = color_hex_to_rgb("AABBCCDD".into());
+        let color: super::Color = color_hex_to_rgba("AABBCCDD".into());
         assert_eq!(color.red, 170);
         assert_eq!(color.green, 187);
         assert_eq!(color.blue, 204);
@@ -73,7 +72,7 @@ mod alpha {
 
     #[test]
     fn without() {
-        let color: super::Color = color_hex_to_rgb("AABBCC".into());
+        let color: super::Color = color_hex_to_rgba("AABBCC".into());
         assert_eq!(color.red, 170);
         assert_eq!(color.green, 187);
         assert_eq!(color.blue, 204);
