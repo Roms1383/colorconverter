@@ -2,7 +2,7 @@ set windows-shell := ["powershell.exe", "-NoLogo", "-Command"]
 set dotenv-load
 
 @dir FOLDER:
-    if (!(Test-Path "{{FOLDER}}")) { [void](New-Item "{{FOLDER}}" -ItemType Directory); Write-Host "Created folder at {{FOLDER}}"; }
+    if (!(Test-Path "{{FOLDER}}" -PathType container)) { [void](New-Item "{{FOLDER}}" -ItemType Directory); Write-Host "Created folder at {{FOLDER}}"; }
 
 @copy FILE TO:
     if (Test-Path "{{FILE}}" -PathType leaf) { Copy-Item -Path '{{FILE}}' -Destination '{{TO}}' -Force } else {  Write-Host "missing {{FILE}}"; }
