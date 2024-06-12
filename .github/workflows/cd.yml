@@ -51,6 +51,8 @@ jobs:
     if: ${{ startsWith(github.event.workflow_run.head_branch, 'v') }}
     runs-on: windows-latest
     needs: bundle
+    permissions:
+      contents: write
     steps:
       - name: Download artifacts
         uses: actions/download-artifact@v4
