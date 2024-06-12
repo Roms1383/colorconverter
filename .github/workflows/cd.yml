@@ -63,4 +63,5 @@ jobs:
           artifacts: "release/colorconverter-windows-${{ github.event.workflow_run.head_branch }}.zip,release/checksum.txt"
           draft: true
           token: ${{ secrets.GITHUB_TOKEN }}
+          tag: ${{ github.event.workflow_run.head_branch }}
           artifactErrorsFailBuild: true
