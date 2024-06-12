@@ -2,7 +2,6 @@ name: CD
 on:
   workflow_run:
     workflows: ["CI"]
-    branches: [main]
     types: [completed]
 
 jobs:
@@ -31,25 +30,25 @@ jobs:
         uses: thedoctor0/zip-release@0.7.6
         with:
           type: zip
-          filename: colorconverter-windows-${{ github.ref_name }}.zip
+          filename: colorconverter-windows-${{ github.event.workflow_run.head_branch }}.zip
           directory: bundle
           path: .
       - name: Generate zip checksum
-        run: Get-FileHash -Path "bundle/colorconverter-windows-${{ github.ref_name }}.zip" -Algorithm SHA256 | Select-Object -ExpandProperty Hash > "checksum.txt"
+        run: Get-FileHash -Path "bundle/colorconverter-windows-${{ github.event.workflow_run.head_branch }}.zip" -Algorithm SHA256 | Select-Object -ExpandProperty Hash > "checksum.txt"
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ github.ref_name }}-windows-artifact
-          path: bundle/colorconverter-windows-${{ github.ref_name }}.zip
+          name: ${{ github.event.workflow_run.head_branch }}-windows-artifact
+          path: bundle/colorconverter-windows-${{ github.event.workflow_run.head_branch }}.zip
           if-no-files-found: error
       - name: Upload artifact checksum
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ github.ref_name }}-windows-artifact-checksum
+          name: ${{ github.event.workflow_run.head_branch }}-windows-artifact-checksum
           path: checksum.txt
           if-no-files-found: error
   release:
-    if: ${{ startsWith(github.ref, 'refs/tags') }}
+    if: ${{ startsWith(github.event.workflow_run.head_branch, 'v') }}
     runs-on: windows-latest
     needs: bundle
     steps:
@@ -58,10 +57,10 @@ jobs:
         with:
           path: release
           merge-multiple: true
-      - name: Create release ${{ github.ref_name }}
+      - name: Create release ${{ github.event.workflow_run.head_branch }}
         uses: ncipollo/release-action@v1
         with:
-          artifacts: "release/colorconverter-windows-${{ github.ref_name }}.zip,release/checksum.txt"
+          artifacts: "release/colorconverter-windows-${{ github.event.workflow_run.head_branch }}.zip,release/checksum.txt"
           draft: true
           token: ${{ secrets.GITHUB_TOKEN }}
           artifactErrorsFailBuild: true
